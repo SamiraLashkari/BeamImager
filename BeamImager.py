@@ -141,15 +141,15 @@ def visualize_selected_cluster(clusters, selected_index, other_intensity=0.7):
     return(clusters_original)
 
 def pointcloud_to_df (point_cloud): 
-    point_cloud_data = np.hstack([np.asarray(point_cloud.points), np.asarray(point_cloud.colors)])  # Stack coordinates and colors horizontally
-    columns = ['x', 'y', 'z', 'R', 'G', 'B']
+    point_cloud_data = np.asarray(point_cloud.points)  # Stack coordinates and colors horizontally
+    columns = ['x', 'y', 'z']
     df_filtered = pd.DataFrame(point_cloud_data, columns=columns)
 
     return(df_filtered)
 
 def merging_ping (df, df_filtered): 
-    df_no_duplicates = df.drop_duplicates(subset=['x', 'y', 'z', 'R', 'G', 'B'])
-    merged_df = pd.merge(df_filtered, df_no_duplicates, on=['x', 'y', 'z', 'R', 'G', 'B'], how='left')
+    df_no_duplicates = df.drop_duplicates(subset=['x', 'y', 'z'])
+    merged_df = pd.merge(df_filtered, df_no_duplicates, on=['x', 'y', 'z'], how='left')
 
     return(merged_df)
 
@@ -444,6 +444,7 @@ def calculate_point_cloud_size(point_cloud):
     return len(np.asarray(point_cloud.points))
 
 def visualize_clusters(clustered_point_clouds, cluster_colors):
+    plt.close('all')
     cluster_clouds = []
 
     for cluster_points in clustered_point_clouds:
@@ -462,9 +463,11 @@ def visualize_clusters(clustered_point_clouds, cluster_colors):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+    #print(sorted_point_clouds)
 
     for i, pc in enumerate(sorted_point_clouds):
         points = np.asarray(pc.points)
+        #print(points)
         ax.scatter(points[:, 0], points[:, 1], points[:, 2], label=f'Cluster {i + 1}', c=cluster_colors[i])
 
     # Display sizes of sorted clusters
@@ -503,22 +506,9 @@ def meshing(point_cloud, radius, max_nn, depth):
     return(mesh,densities)
 
 def count_point_per_voxel(point_cloud, voxel_size):
-    downsampled_pcd = point_cloud.voxel_down_sample(voxel_size)
-
-    # Get voxel coordinates
-    voxel_coords = np.floor(np.asarray(downsampled_pcd.points) / voxel_size).astype(int)
-
-    # Assign a constant gray color to each voxel
-    gray_color = [0.5, 0.5, 0.5]
-    voxel_colors = np.full((len(voxel_coords), 3), gray_color)
-
-    # Create a new point cloud with voxel coordinates and colors
-    colored_voxels = o3d.geometry.PointCloud()
-    colored_voxels.points = o3d.utility.Vector3dVector(voxel_coords * voxel_size)
-    colored_voxels.colors = o3d.utility.Vector3dVector(voxel_colors)
 
     # Use VoxelGrid.create_from_point_cloud without colors
-    voxel_grid = o3d.geometry.VoxelGrid.create_from_point_cloud(colored_voxels, voxel_size)
+    voxel_grid = o3d.geometry.VoxelGrid.create_from_point_cloud(point_cloud, voxel_size = voxel_size)
 
     # Get voxel indices
     voxel_indices = np.floor(np.asarray(point_cloud.points) / voxel_size).astype(int)
@@ -538,17 +528,15 @@ def custom_voxelization(voxel_grid, unique_voxels,voxel_counts, voxel_size, thre
 
     # Create a new column based on conditions
     df['weight'] = 0  # Initialize with 0
+    #print(len(df['weight']))
     df.loc[df['count'] > threshold_count_up, 'weight'] = 1
     df.loc[(df['count'] > threshold_count_down) & (df['count'] <= threshold_count_up), 'weight'] = (df['count'] - threshold_count_down) / (threshold_count_up - threshold_count_down)
+    #print(df['weight'].values)
     column_sum = df['weight'].sum()
+    #print(column_sum)
     volume = column_sum * voxel_size**3
 
-    # Extract points from dense voxels
-    dense_point_cloud = o3d.geometry.PointCloud()
-    dense_point_cloud.points = o3d.utility.Vector3dVector(dense_voxels)
-    o3d.visualization.draw_geometries([dense_point_cloud])
-
-    return dense_point_cloud, volume
+    return  volume
 
 def voxelize(point_cloud, voxel_size):
 
@@ -564,7 +552,7 @@ def voxelize(point_cloud, voxel_size):
     o3d.visualization.draw_geometries([voxel_grid, point_cloud])
     # Calculate the volume of the voxelized point cloud
     voxel_volume = len(voxel_grid.get_voxels()) * voxel_size**3
-    print(f"Volume of the point cloud (voxelized):{voxel_volume}")
+    return voxel_volume 
 
 def analysis_for_a_folder (data_folder): 
     
@@ -685,12 +673,3 @@ def intersection_pointclouds (pointclouds):
         point_list.append(new_pc)
 
     return(point_list, pointclouds)   
-
-
-def save_clusters(cluster_point_clouds, output_folder):
-
-    # Create the output folder if it doesn't exist
-    os.makedirs(output_folder, exist_ok=True)
-
-    # Assign a unique name to the cluster
-    cluster_name = f"Cluster_{cluster_id}"
