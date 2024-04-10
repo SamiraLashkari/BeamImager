@@ -566,6 +566,7 @@ class DataVisualizationApp:
         # Delete all default values
         self.lower_threshold_entry.delete(0, tk.END)
         self.upper_threshold_entry.delete(0, tk.END)
+        self.remove_bottom_entry.delete(0, tk.END)
         self.nb_neighbors_entry.delete(0, tk.END)
         self.std_ratio_entry.delete(0, tk.END)
         self.nb_points_entry.delete(0, tk.END)
@@ -578,7 +579,7 @@ class DataVisualizationApp:
         self.minNumSamples_entry.delete(0, tk.END)
         self.Upper_Threshold_entry.delete(0, tk.END)
         self.Lower_Threshold_entry.delete(0, tk.END)
-        self.number_interpolated_point_entry.delete(0, tk.END)
+        self.number_interpolated_point_entry.delete(0, tk.END)    
         self.voxel_size_entry.delete(0, tk.END)
 
     def set_default_sea_weed_values(self):
@@ -591,6 +592,10 @@ class DataVisualizationApp:
         self.lower_threshold_entry.insert(0, self.default_low_threshold)
         self.default_high_threshold = -30
         self.upper_threshold_entry.insert(0, self.default_high_threshold)
+
+        # Default percentage to remove data from the bottom
+        self.default_percent = 0.15
+        self.remove_bottom_entry.insert(0, self.default_percent)
 
         # Default parameters for outlier removal
         self.default_nb_neighbors = 1000
@@ -643,12 +648,16 @@ class DataVisualizationApp:
         self.default_high_threshold = 2000
         self.upper_threshold_entry.insert(0, self.default_high_threshold)
 
+        # Default percentage to remove data from the bottom
+        self.default_percent = 0.15
+        self.remove_bottom_entry.insert(0, self.default_percent)
+
         # Default parameters for outlier removal
-        self.default_nb_neighbors = 100
+        self.default_nb_neighbors = 200
         self.nb_neighbors_entry.insert(0, self.default_nb_neighbors)
         self.default_std_ratio = 2.0
         self.std_ratio_entry.insert(0, self.default_std_ratio)
-        self.default_nb_points = 100
+        self.default_nb_points = 200
         self.nb_points_entry.insert(0, self.default_nb_points) 
         self.default_radius = 0.5
         self.radius_entry.insert(0,self.default_radius)
@@ -659,16 +668,11 @@ class DataVisualizationApp:
         self.intensity_clusters_entry.insert(0, self.default_num_clusters)
         self.density_gmm_components_entry.insert(0, self.default_num_clusters)
         self.intensity_gmm_components_entry.insert(0, self.default_num_clusters)
-        self.default_minClusterSize = 300
+        self.default_minClusterSize = 100
         self.minClusterSize_entry.insert(0, self.default_minClusterSize)
-        self.default_minNumSamples = 200
+        self.default_minNumSamples = 100
         self.minNumSamples_entry.insert(0, self.default_minNumSamples)
-
-        #Default parameters for meshing
-        self.default_radius = 0.1
-        self.default_max_nn = 30
-        self.default_depth = 8
-        self.default_voxel_size = 0.1   
+ 
 
         self.default_Upper_Threshold = 20
         self.Upper_Threshold_entry.insert(0, self.default_Upper_Threshold)
@@ -701,7 +705,9 @@ class DataVisualizationApp:
         self.text_box.see(tk.END)  # Scroll to the end of the text
 
     def reset_volume_function(self):
-        self.total_volume = 0 
+        self.reset_volume = True
+        self.volume_values= [] 
+        self.calculate_total_volume()
 
     def saving_point_cloud(self):
         if self.point_cloud is None:
@@ -863,8 +869,8 @@ class DataVisualizationApp:
         messagebox.showinfo(f'{rows_removed} rows Removed!', "Go and remove data from the bottom if needed.")
 
     def remove_bottom_data(self):
-        percent = float(self.remove_bottom_entry.get())
-
+        percent = float(self.remove_bottom_entry.get()) if self.remove_bottom_entry.get() else self.default_percent
+        
         self.filtered_df, self.removed_df = BeamImager.filter_noise(self.df, percent)
         BeamImager.display_inlier_outlier_bottom(self.filtered_df, self.removed_df)   
         self.df = self.filtered_df.copy()
