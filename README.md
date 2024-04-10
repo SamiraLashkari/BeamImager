@@ -26,5 +26,5 @@ To run the graphical user interface (GUI), execute the following command in your
 ```bash
 python BeamImager_GUI_v2.py
 ```
-![GUI-image](https://github.com/images/logo.png](https://github.com/SamiraLashkari/BeamImager/blob/main/GUI_image.png)
+![GUI-image](https://github.com/SamiraLashkari/BeamImager/blob/main/GUI_image.png)
 
