@@ -1,6 +1,6 @@
 open3d
-BeamImager
 pandas
 numpy
 scikit-learn
 matplotlib
+hdbscan
