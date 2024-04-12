@@ -28,54 +28,58 @@ python BeamImager_GUI_v2.py
 ```
 ![GUI-image](https://github.com/SamiraLashkari/BeamImager/blob/main/GUI_image.png)
 
-1. **Data Upload**:
+## Part 1: uploading data
+**Data Upload**:
    - Upload data in .csv or .txt format with columns X, Y, Z, intensity, ping_number, and beam.
    - After upload, view intensity histogram.
 
-2. **Default Values**:
+**Default Values**:
    - Choose species to set default parameter values.
-
-3. **Remove Noise**:
+   - 
+## Part 2: Filtering (red)
+**Remove Noise**:
    - Visualize beam number histogram to identify noise.
    - Remove noise using 'Remove Most Frequent'.
    - Adjust bottom data removal ratio for profile noise.
 
-4. **Setting Threshold**:
+**Setting Threshold**:
    - Adjust threshold if necessary and filter.
 
-5. **Statistical Outlier Removal**:
+**Statistical Outlier Removal**:
    - Set number of neighbors and standard ratio for outlier removal.
 
-6. **Radius Outlier Removal**:
+**Radius Outlier Removal**:
    - Define minimum points and radius for outlier removal.
-
-7. **K-Means Clustering**:
+## Part3: Clustering (green)
+**K-Means Clustering**:
    - Automatically group similar points.
    - Choose number of clusters.
 
-8. **GMM Clustering**:
+**GMM Clustering**:
    - Identify hidden patterns with less rigid clusters.
    - Choose number of clusters.
 
-9. **Hdbscan Clustering**:
+**Hdbscan Clustering**:
    - Identify clusters based on data point density.
    - Set minimum cluster size and samples.
 
-10. **Drawing Clusters**:
+**Drawing Clusters**:
     - Manually draw cluster boundaries if needed.
+    
+## Part4: Volume calculation (yellow)
+**Result Section**:
+    - Edit, add, remove, and merge clusters to the filnal result
+    - Update and check result by clicking on the choosen cluster to add, remove or merge into result.
 
-11. **Result Section**:
-    - Edit, add, remove, and merge clusters.
-    - Update and check result.
+**Interpolation**:
+    - Estimate points between known data points in point cloud of each volume (you can choose any cluster to process the rest).
 
-12. **Calculate Result Volume**:
-    - Add cluster volumes to total volume.
-
-13. **Interpolation**:
-    - Estimate points between known data points.
-
-14. **Voxelization**:
+**Voxelization**:
     - Convert point cloud to voxel grid.
     - Define thresholds for voxelization.
     - Set upper and lower thresholds for weighted voxelization.
     - Calculate voxel weights based on point counts.
+
+**Calculate Result Volume**:
+    - Add cluster volumes to total volume.    
+    
