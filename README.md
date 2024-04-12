@@ -28,3 +28,54 @@ python BeamImager_GUI_v2.py
 ```
 ![GUI-image](https://github.com/SamiraLashkari/BeamImager/blob/main/GUI_image.png)
 
+1. **Data Upload**:
+   - Upload data in .csv or .txt format with columns X, Y, Z, intensity, ping_number, and beam.
+   - After upload, view intensity histogram.
+
+2. **Default Values**:
+   - Choose species to set default parameter values.
+
+3. **Remove Noise**:
+   - Visualize beam number histogram to identify noise.
+   - Remove noise using 'Remove Most Frequent'.
+   - Adjust bottom data removal ratio for profile noise.
+
+4. **Setting Threshold**:
+   - Adjust threshold if necessary and filter.
+
+5. **Statistical Outlier Removal**:
+   - Set number of neighbors and standard ratio for outlier removal.
+
+6. **Radius Outlier Removal**:
+   - Define minimum points and radius for outlier removal.
+
+7. **K-Means Clustering**:
+   - Automatically group similar points.
+   - Choose number of clusters.
+
+8. **GMM Clustering**:
+   - Identify hidden patterns with less rigid clusters.
+   - Choose number of clusters.
+
+9. **Hdbscan Clustering**:
+   - Identify clusters based on data point density.
+   - Set minimum cluster size and samples.
+
+10. **Drawing Clusters**:
+    - Manually draw cluster boundaries if needed.
+
+11. **Result Section**:
+    - Edit, add, remove, and merge clusters.
+    - Update and check result.
+
+12. **Calculate Result Volume**:
+    - Add cluster volumes to total volume.
+
+13. **Interpolation**:
+    - Estimate points between known data points.
+
+14. **Voxelization**:
+    - Convert point cloud to voxel grid.
+    - Define thresholds for voxelization.
+    - Set upper and lower thresholds for weighted voxelization.
+    - Calculate voxel weights based on point counts.
