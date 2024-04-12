@@ -35,7 +35,7 @@ python BeamImager_GUI_v2.py
 
 **Default Values**:
    - Choose species to set default parameter values.
-   - 
+     
 ## Part 2: Filtering (red)
 **Remove Noise**:
    - Visualize beam number histogram to identify noise.
