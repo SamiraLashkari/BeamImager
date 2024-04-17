@@ -4,6 +4,8 @@
 
 This repository provides code for visualizing and calculating the volume of aquaculture installations (it tested for seaweed and mussels) using processed data from a multibeam ecosounder sensor.
 
+If you have any question, don't hesitate to contact me: samira.lashkari@vliz.be
+
 ## Data Requirements
 
 The uploaded data should have the following six columns in this specific order: 'x', 'y', 'z', 'intensity', 'ping_number', 'beam' and be .txt or .csv format. Please ensure that there are no indices for the columns.
