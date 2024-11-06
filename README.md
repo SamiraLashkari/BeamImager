@@ -1,6 +1,6 @@
 # Aquaculture Installation Volume Calculator
 
-A newer version can find here: [here](https://github.com/SamiraLashkari/CloudVolume_multibeam)
+A newer version can be find here: [here](https://github.com/SamiraLashkari/CloudVolume_multibeam)
  
 ## Overview
 
